@@ -25,7 +25,7 @@
 ### Prerequsites
 
 #### Github Action
-- Add below secrets with values to cloned repo accordingly. 
+- Add below github secrets with values to cloned repo accordingly. This is required to execute github action workflow.
 
 ```bash
 AWS_ACCESS_KEY_ID
@@ -35,6 +35,9 @@ IAM_ROLE
 KMS_KEY
 VPC
 ```
+- Create/Update the [s3 state bucket](https://github.com/shashanksinha89/bitcoin-ecs/blob/master/terraform/data.tf#L11) accordingly.
+
+- Create/Update [ECR repo](https://github.com/shashanksinha89/bitcoin-ecs/blob/master/terraform/ecs_task.tf#L12) accordingly.
 
 
 
@@ -72,7 +75,9 @@ Actions --> build_deploy (workflow)
 #### Local Execution
 
 ```bash
+docker build . -t <ECR REPO>
+docker push <ECR REPO>
 cd terraform/
-terraform plan -out plan
+terraform plan -out plan -var="vpc_id=<VPC_ID>" -var="kms_key=<KMS_KEY>" -var="iam_role=<IAM_ROLE>"
 terraform apply plan
 ```
